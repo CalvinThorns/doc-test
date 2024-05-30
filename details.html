@@ -1,0 +1,414 @@
+<html>
+<head>
+  <style>
+    #logout-button{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: darkcyan;
+            color: white;
+            float: right;
+        }
+    .container {
+        border-radius: 25px;
+        position: absolute;
+        top: 35%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        width: 1500px;
+        height: 800px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .left {
+        width: 350px;
+        height: 800px;
+    }
+    
+    .middle {
+        width: 350px;
+        height: 800px;
+    }
+    .right {
+        width: 350px;
+        height: 800px;
+    }
+    #home-button{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: darkcyan;
+            color: white;
+            float: left;
+        }
+        #allowedVertrieb{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: green;
+            color: white;
+            float: left;
+        }
+        #deniedVertrieb{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: red;
+            color: white;
+            float: left;
+        }
+        #allowedEinkauf{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: green;
+            color: white;
+            float: left;
+        }
+        #deniedEinkauf{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: red;
+            color: white;
+            float: left;
+        }
+        #allowedProduktion{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: green;
+            color: white;
+            float: left;
+        }
+        #deniedProduktion{
+            width: 150px;
+            height: 35px;
+            border: 0px;
+            border-radius: 10px;
+            font-size: 14pt;
+            background-color: red;
+            color: white;
+            float: left;
+        }
+</style>
+
+<title>Detailseite</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.17.0"></script>
+<script>
+const SUPABASE_URL = 'https://txgizngwinakajvvjmls.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4Z2l6bmd3aW5ha2FqdnZqbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwMDM1NTEsImV4cCI6MjAzMjU3OTU1MX0.-kmU84uC-mqwjrmEolZTZ3tb_ts8gxj4gAVBpdQLw3M';
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                const user = JSON.parse(sessionStorage.getItem('user'));
+                if (!user) {
+                    window.location.href = 'login2.html';
+                    return;
+                } else {
+                  console.log(user.department)
+                }
+            document.getElementById('logout-button').addEventListener('click', () => {
+                sessionStorage.removeItem('user');
+                window.location.href = 'login2.html';
+                });
+
+
+                if(user.department.localeCompare("Vertrieb") == 0){
+  document.getElementById("allowedEinkauf").style.display = "none";
+  document.getElementById("deniedEinkauf").style.display = "none";
+  document.getElementById("allowedProduktion").style.display = "none";
+  document.getElementById("deniedProduktion").style.display = "none";
+} else if(user.department.localeCompare("Einkauf") == 0){
+  document.getElementById("allowedVertrieb").style.display = "none";
+  document.getElementById("deniedVertrieb").style.display = "none";
+  document.getElementById("allowedProduktion").style.display = "none";
+  document.getElementById("deniedProduktion").style.display = "none";
+} else{
+  document.getElementById("allowedVertrieb").style.display = "none";
+  document.getElementById("deniedVertrieb").style.display = "none";
+  document.getElementById("allowedEinkauf").style.display = "none";
+  document.getElementById("deniedEinkauf").style.display = "none";
+}
+
+                const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+                
+            if (id) {
+                const { data, error } = await supabase
+                    .from('docs')
+                    .select('*')
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('Error fetching data:', error);
+                } else if (data.length > 0) {
+                    const galleryData = data[0];
+                    document.getElementById("title1").innerHTML = '<font size="5">' + galleryData.title + '</font>' ;
+                    document.getElementById("ansprechpartner_Kunde").innerHTML = '<font size="5">' + galleryData.ansprechpartner_kunde + '</font>';
+                    document.getElementById("ad").innerHTML = '<font size="5">' + galleryData.ad_mitarbeiter + '</font>';
+                    document.getElementById("ada").innerHTML = '<font size="5">' + galleryData.art_der_anfrage + '</font>';
+                    document.getElementById("ws").innerHTML = '<font size="5">' + galleryData.weitere_standorte + '</font>';
+                    document.getElementById("datum").innerHTML = '<font size="5">' + galleryData.release_date + '</font>';
+                    document.getElementById("status_e").innerHTML = '<font size="5">' + galleryData.status_einkauf + '</font>';
+                    document.getElementById("firm").innerHTML = '<font size="5">' + galleryData.firma + '</font>';
+                    document.getElementById("p_Name").innerHTML = '<font size="5">' + galleryData.produktname + '</font>';
+                    document.getElementById("regionaler_vertriebsleiter").innerHTML = '<font size="5">' + galleryData.reg_vertriebsleiter + '</font>';
+                    document.getElementById("boniIndex").innerHTML = '<font size="5">' + galleryData.bonitaetsindex + '</font>';
+                    document.getElementById("jahresmenge_bedarf").innerHTML = '<font size="5">' + galleryData.jahresmenge + '</font>';
+                    document.getElementById("status_v").innerHTML = '<font size="5">' + galleryData.status_verkauf + '</font>';
+                    document.getElementById("status").innerHTML = '<font size="5">' + galleryData.status + '</font>';
+                    document.getElementById("adress").innerHTML = '<font size="5">' + galleryData.adresse + '</font>';
+                    document.getElementById("artikel_nr").innerHTML = '<font size="5">' + galleryData.art_nr + '</font>';
+                    document.getElementById("p_manager").innerHTML = '<font size="5">' + galleryData.produktmanager + '</font>';
+                    document.getElementById("compliance").innerHTML = '<font size="5">' + galleryData.compliancepruefung + '</font>';
+                    document.getElementById("k_anforderung").innerHTML = '<font size="5">' + galleryData.kundenanforderungen + '</font>';
+                    document.getElementById("status_p").innerHTML = '<font size="5">' + galleryData.status_produktion + '</font>';
+                    document.getElementById("created").innerHTML = '<font size="5">' + galleryData.creator + '</font>';
+                }
+            } else {
+                console.error('No ID found in URL');
+            }
+            
+            allowedVertrieb.addEventListener('click', async () => {
+                
+                  try {
+                    const { data, error } = await supabase
+                        .from('docs')
+                        .update({ status_verkauf: 'Genehmigt', status: "Genehmigt" })
+                        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+                        .select();
+
+                    if (error) {
+                        console.error('Error updating data:', error);
+                    } else {
+                        console.log('Data updated successfully:', data);
+                        window.location.href = 'startSite.html';
+                    }
+                } catch (err) {
+                    console.error('Unexpected error:', err);
+                }
+                
+                  try {
+                    const { data, error } = await supabase
+                        .from('docs')
+                        .update({ status_verkauf: 'Genehmigt', status: "in Bearbeitung" })
+                        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+                        .select();
+
+                    if (error) {
+                        console.error('Error updating data:', error);
+                    } else {
+                        console.log('Data updated successfully:', data);
+                        window.location.href = 'startSite.html';
+                    }
+                } catch (err) {
+                    console.error('Unexpected error:', err);
+                }
+                
+                
+              });
+
+              deniedVertrieb.addEventListener('click', async () => {
+
+try {
+    const { data, error } = await supabase
+        .from('docs')
+        .update({ status_verkauf: 'Abgelehnt', status: "Abgelehnt" })
+        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+        .select();
+
+    if (error) {
+        console.error('Error updating data:', error);
+    } else {
+        console.log('Data updated successfully:', data);
+        window.location.href = 'startSite.html';
+    }
+} catch (err) {
+    console.error('Unexpected error:', err);
+}
+});
+
+allowedEinkauf.addEventListener('click', async () => {
+
+try {
+    const { data, error } = await supabase
+        .from('docs')
+        .update({ status_einkauf: 'Genehmigt', status: "in Bearbeitung" })
+        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+        .select();
+
+    if (error) {
+        console.error('Error updating data:', error);
+    } else {
+        console.log('Data updated successfully:', data);
+        window.location.href = 'startSite.html';
+    }
+} catch (err) {
+    console.error('Unexpected error:', err);
+}
+});
+
+deniedEinkauf.addEventListener('click', async () => {
+
+try {
+    const { data, error } = await supabase
+        .from('docs')
+        .update({ status_einkauf: 'Abgelehnt', status: "Abgelehnt" })
+        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+        .select();
+
+    if (error) {
+        console.error('Error updating data:', error);
+    } else {
+        console.log('Data updated successfully:', data);
+        window.location.href = 'startSite.html';
+    }
+} catch (err) {
+    console.error('Unexpected error:', err);
+}
+});
+
+allowedProduktion.addEventListener('click', async () => {
+
+try {
+    const { data, error } = await supabase
+        .from('docs')
+        .update({ status_produktion: 'Genehmigt', status: "Genehmigt" })
+        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+        .select();
+
+    if (error) {
+        console.error('Error updating data:', error);
+    } else {
+        console.log('Data updated successfully:', data);
+        window.location.href = 'startSite.html';
+    }
+} catch (err) {
+    console.error('Unexpected error:', err);
+}
+});
+
+deniedProduktion.addEventListener('click', async () => {
+
+try {
+    const { data, error } = await supabase
+        .from('docs')
+        .update({ status_produktion: 'Abgelehnt', status: "Abgelehnt" })
+        .eq('id', id) // Assuming you are updating a row with id=1, change as necessary
+        .select();
+
+    if (error) {
+        console.error('Error updating data:', error);
+    } else {
+        console.log('Data updated successfully:', data);
+        window.location.href = 'startSite.html';
+    }
+} catch (err) {
+    console.error('Unexpected error:', err);
+}
+});
+
+
+            
+              });
+</script>
+</head>
+<body>
+  <form method="get" action="startSite.html">
+    <button type="submit" id="home-button">home</button>
+</form>
+  <button id="logout-button">Logout</button>
+  <div class="container">
+      <div class="left">
+        <p style="font-size:25px;"> <b>Titel</b></p>
+          <label id="title1"></label> 
+          <p style="font-size:25px;"><b>Firma</b></p>
+          <label id="firm"></label> 
+          <p style="font-size:25px;"><b>Adresse</b></p>
+          <label id="adress"></label> 
+          <p style="font-size:25px;"><b>Ansprechpartner Kunde</b></p>
+          <label id="ansprechpartner_Kunde"></label> 
+          <p style="font-size:25px;"><b>Art der Anfrage</b></p>
+          <label id="ada"></label> 
+          <p style="font-size:25px;"><b>Weitere Standorte</b></p>
+          <label id="ws"></label> 
+          <p style="font-size:25px;"><b>Bonitätsindex</b></p>
+          <label id="boniIndex"></label> 
+          <p style="font-size:25px;"><b>Complianceprüfung</b></p>
+          <label id="compliance"></label> 
+          <p style="font-size:25px;"><b>Kundenanforderungen</b></p>
+          <label id="k_anforderung"></label> 
+      </div>
+      <div class="middle">
+          <p style="font-size:25px;"><b>Produktname</b></p>
+          <label id="p_Name"></label> 
+          <p style="font-size:25px;"><b>Art-Nr.</b></p>
+          <label id="artikel_nr"></label> 
+          <p style="font-size:25px;"><b>Regionaler Vertriebsleiter</b></p>
+          <label id="regionaler_vertriebsleiter"></label> 
+          <p style="font-size:25px;"><b>AD-Mitarbeiter</b></p>
+          <label id="ad"></label> 
+          <p style="font-size:25px;"><b>Produktmanager</b></p>
+          <label id="p_manager"></label> 
+          <p style="font-size:25px;"><b>Bedarf Jahresmenge</b></p>
+          <label id="jahresmenge_bedarf"></label> 
+          <p style="font-size:25px;"><b>Erstellt von</b></p>
+          <label id="created"></label>
+          <p style="font-size:25px;"><b>Datum</b></p>
+          <label id="datum"></label> 
+      </div>
+      <div class="right">
+          <p style="font-size:25px;"><b>Status Vertrieb</b></p>
+          <label id="status_v"></label>
+          <p style="font-size:25px;"><b>Status Einkauf</b></p>
+          <label id="status_e"></label> 
+          <p style="font-size:25px;"><b>Status Produktion</b></p>
+          <label id="status_p"></label>
+          <p style="font-size:25px;"><b>Status</b></p>
+          <label id="status"></label>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          
+            <button type="submit" id="allowedVertrieb">Genehmigt</button>
+            <button type="submit" id="deniedVertrieb">Abgelehnt</button>
+            <br>
+            <br>
+            <br>
+            <br>
+          
+            <button type="submit" id="allowedEinkauf">Genehmigt</button>
+            <button type="submit" id="deniedEinkauf">Abgelehnt</button>
+            <br>
+            <br>
+            <br>
+            <br>
+          
+            <button type="submit" id="allowedProduktion">Genehmigt</button>
+            <button type="submit" id="deniedProduktion">Abgelehnt</button>
+          
+      </div>
+  </div>
+</body>
+</html>
