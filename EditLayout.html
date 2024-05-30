@@ -1,0 +1,179 @@
+<html>
+    <style>
+        #logout-button {
+              margin-left: 90%;
+            }
+        .container {
+            border-radius: 25px;
+            position: absolute;
+            top: 35%;
+            left: 60%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+            width: 1500px;
+            height: 800px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        .left {
+            width: 350px;
+            height: 800px;
+        }
+        
+        .middle {
+            width: 350px;
+            height: 800px;
+        }
+        .right {
+            width: 350px;
+            height: 800px;
+        }
+    </style>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.17.0"></script>
+        <script>
+            const SUPABASE_URL = 'https://txgizngwinakajvvjmls.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4Z2l6bmd3aW5ha2FqdnZqbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwMDM1NTEsImV4cCI6MjAzMjU3OTU1MX0.-kmU84uC-mqwjrmEolZTZ3tb_ts8gxj4gAVBpdQLw3M';
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                const user = JSON.parse(sessionStorage.getItem('user'));
+                if (!user) {
+                    window.location.href = 'login2.html';
+                    return;
+                }
+            document.getElementById('logout-button').addEventListener('click', () => {
+                sessionStorage.removeItem('user');
+                window.location.href = 'login2.html';
+                });
+            
+            
+            document.getElementById('form-submit').addEventListener('click', async (event) => {
+                event.preventDefault();
+                checkJahresmenge();
+
+                let status_Einkauf = false;
+                let status_Verkauf = false;
+                let status_Produktion = false;
+                let status_allg='Offen'
+
+                console.log(document.getElementById('jahresmenge'));
+                if(document.getElementById('jahresmenge').value < 25000){
+                status_Produktion = "Genehmigt";
+                status_Einkauf = "Genehmigt";
+                status_allg = 'in Bearbeitung'
+            }
+
+                const formData = {
+                    title: document.getElementById('title').value,
+                    ansprechpartner_kunde: document.getElementById('Ansprechpartner Kunde').value,
+                    ad_mitarbeiter: document.getElementById('AD-Mitarbeiter').value,
+                    art_der_anfrage: document.getElementById('Art').value,
+                    weitere_standorte: document.querySelector('input[name="JaWeitere"]:checked') ? document.querySelector('input[name="JaWeitere"]:checked').value : document.querySelector('input[name="KeineWeiteren"]:checked').value,
+                    release_date: document.getElementById('releaseDate').value,
+                    firma: document.getElementById('firma').value,
+                    produktname: document.getElementById('produktname').value,
+                    reg_vertriebsleiter: document.getElementById('RegVertriebsleiter').value,
+                    bonitaetsindex: document.getElementById('bonitätsindex').value,
+                    jahresmenge: document.getElementById('jahresmenge').value,
+                    adresse: document.getElementById('adresse').value,
+                    art_nr: document.getElementById('art-nr').value,
+                    produktmanager: document.getElementById('Produktmanager').value,
+                    compliancepruefung: document.getElementById('complianceprüfung').value,
+                    kundenanforderungen: document.getElementById('kundenanforderungen').value,
+                    status_einkauf: status_Einkauf,
+                    status_verkauf: status_Verkauf,
+                    status_produktion: status_Produktion,
+                    status: status_allg,
+                    creator: user.name
+                };
+
+                const { data, error } = await supabase
+                    .from('docs') // Replace with your table name
+                    .insert([formData]);
+
+                if (error) {
+                    console.error('Error inserting data:', error);
+                } else {
+                    console.log('Data inserted successfully:', data);
+                    alert('Data submitted successfully');
+                }
+            });
+        });
+
+        function checkJahresmenge(){
+            
+        }
+    
+          </script>
+    </head>
+
+    <body>
+        <button id="logout-button">Logout</button>
+        <div class="container">
+            <div class="left">
+                <p>Titel</p>
+                <input type="text" id="title" name="title">
+                <br>
+                <p>Ansprechpartner Kunde</p>
+                <input type="text" id="Ansprechpartner Kunde" name="Ansprechpartner Kunde">
+                <p>AD-Mitarbeiter</p>
+                <select name="AD-Mitarbeiter" id="AD-Mitarbeiter">
+                    <option value="Mustermann" selected>Mustermann</option>
+                    <option value="Musterfrau">Musterfrau</option>
+                    <option value="Doe" >Doe</option>
+                </select>
+                <p>Art der Anfrage</p>
+                <select name="Art" id="Art">
+                    <option value="Interessent">Interessent</option>
+                    <option value="Kunde">Kunde</option>
+                </select>
+                <p>Weitere Standorte</p>
+                <input type="radio" id="JaWeitere" name="JaWeitere" value="Ja">
+                <label for="JaWeitere">Ja</label>
+                <input type="radio" id="KeineWeiteren" name="KeineWeiteren" value="Nein">
+                <label for="KeineWeiteren">Nein</label>
+                <p>Datum</p>
+                <input type="date" id="releaseDate" name="releaseDate">
+            </div>
+            <div class="middle">
+                <p>Firma</p>
+                <input type="text"id="firma" name="firma">
+                <p>Produktname</p>
+                <input type="text" id="produktname" name="produktname">
+                <p>Regionaler Vertriebsleiter</p>
+                <select name="RegVertriebsleiter" id="RegVertriebsleiter">
+                    <option value="Mustermann" selected>Mustermann</option>
+                    <option value="Musterfrau">Musterfrau</option>
+                    <option value="Doe" >Doe</option>
+                </select>
+                <p>Bonitätsindex</p>
+                <input type="text" id="bonitätsindex" name="bonitätsindex">
+                <p>Bedarf Jahresmenge</p>
+                <input type="number" id="jahresmenge" name="jahresmenge">
+            </div>
+            <div class="right">
+                <p>Adresse</p>
+                <input type="text" id="adresse" name="adresse">
+                <p>Art-Nr.</p>
+                <input type="text" id="art-nr" name="art-nr">
+                <p>Produktmanager</p>
+                <select name="Produktmanager" id="Produktmanager">
+                    <option value="Mustermann" selected>Mustermann</option>
+                    <option value="Musterfrau">Musterfrau</option>
+                    <option value="Doe" >Doe</option>
+                </select>
+                <p>Complianceprüfung</p>
+                <input type="text" id="complianceprüfung" name="complianceprüfung">
+                <p>Kundenanforderungen</p>
+                <input type="text" id="kundenanforderungen" name="kundenanforderungen">
+                <p>Anlagen</p>
+                <input type="file">
+            </div>
+        </div>
+        <button id="form-submit">Submit</button>
+    </body>
+</html>

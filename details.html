@@ -1,0 +1,153 @@
+<html>
+<head>
+  <style>
+    #logout-button {
+          margin-left: 90%;
+        }
+    .container {
+        border-radius: 25px;
+        position: absolute;
+        top: 35%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        width: 1500px;
+        height: 800px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .left {
+        width: 350px;
+        height: 800px;
+    }
+    
+    .middle {
+        width: 350px;
+        height: 800px;
+    }
+    .right {
+        width: 350px;
+        height: 800px;
+    }
+</style>
+<title>Detailseite</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.17.0"></script>
+<script>
+const SUPABASE_URL = 'https://txgizngwinakajvvjmls.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4Z2l6bmd3aW5ha2FqdnZqbWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwMDM1NTEsImV4cCI6MjAzMjU3OTU1MX0.-kmU84uC-mqwjrmEolZTZ3tb_ts8gxj4gAVBpdQLw3M';
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                const user = JSON.parse(sessionStorage.getItem('user'));
+                if (!user) {
+                    window.location.href = 'login2.html';
+                    return;
+                }
+            document.getElementById('logout-button').addEventListener('click', () => {
+                sessionStorage.removeItem('user');
+                window.location.href = 'login2.html';
+                });
+
+                var galleryData;
+
+                const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                const { data, error } = await supabase
+                    .from('docs')
+                    .select('*')
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('Error fetching data:', error);
+                } else if (data.length > 0) {
+                    const galleryData = data[0];
+                    document.getElementById("title1").innerHTML = galleryData.title;
+                    document.getElementById("ansprechpartner_Kunde").innerHTML = galleryData.ansprechpartner_kunde;
+                    document.getElementById("ad").innerHTML = galleryData.ad_mitarbeiter;
+                    document.getElementById("ada").innerHTML = galleryData.art_der_anfrage;
+                    document.getElementById("ws").innerHTML = galleryData.weitere_standorte;
+                    document.getElementById("datum").innerHTML = galleryData.release_date;
+                    document.getElementById("status_e").innerHTML = galleryData.status_einkauf;
+                    document.getElementById("firm").innerHTML = galleryData.firma;
+                    document.getElementById("p_Name").innerHTML = galleryData.produktname;
+                    document.getElementById("regionaler_vertriebsleiter").innerHTML = galleryData.reg_vertriebsleiter;
+                    document.getElementById("boniIndex").innerHTML = galleryData.bonitaetsindex;
+                    document.getElementById("jahresmenge_bedarf").innerHTML = galleryData.jahresmenge;
+                    document.getElementById("status_v").innerHTML = galleryData.status_verkauf;
+                    document.getElementById("status").innerHTML = galleryData.status;
+                    document.getElementById("adress").innerHTML = galleryData.adresse;
+                    document.getElementById("artikel_nr").innerHTML = galleryData.art_nr;
+                    document.getElementById("p_manager").innerHTML = galleryData.produktmanager;
+                    document.getElementById("compliance").innerHTML = galleryData.compliancepruefung;
+                    document.getElementById("k_anforderung").innerHTML = galleryData.kundenanforderungen;
+                    document.getElementById("status_p").innerHTML = galleryData.status_produktion;
+                    document.getElementById("created").innerHTML = galleryData.creator;
+                }
+            } else {
+                console.error('No ID found in URL');
+            }
+            
+              });
+</script>
+</head>
+<body>
+  <button id="logout-button">Logout</button>
+  <div class="container">
+      <div class="left">
+          <p>Titel</p>
+          <label id="title1"></label> 
+          <br>
+          <p>Ansprechpartner Kunde</p>
+          <label id="ansprechpartner_Kunde"></label> 
+          <p>AD-Mitarbeiter</p>
+          <label id="ad"></label> 
+          <p>Art der Anfrage</p>
+          <label id="ada"></label> 
+          <p>Weitere Standorte</p>
+          <label id="ws"></label> 
+          <p>Datum</p>
+          <label id="datum"></label> 
+          <p>Status Einkauf</p>
+          <label id="status_e"></label> 
+      </div>
+      <div class="middle">
+          <p>Firma</p>
+          <label id="firm"></label> 
+          <p>Produktname</p>
+          <label id="p_Name"></label> 
+          <p>Regionaler Vertriebsleiter</p>
+          <label id="regionaler_vertriebsleiter"></label> 
+          <p>Bonitätsindex</p>
+          <label id="boniIndex"></label> 
+          <p>Bedarf Jahresmenge</p>
+          <label id="jahresmenge_bedarf"></label> 
+          <p>Status Vertrieb</p>
+          <label id="status_v"></label>
+          <p>Status</p>
+          <label id="status"></label>
+      </div>
+      <div class="right">
+          <p>Adresse</p>
+          <label id="adress"></label> 
+          <p>Art-Nr.</p>
+          <label id="artikel_nr"></label> 
+          <p>Produktmanager</p>
+          <label id="p_manager"></label> 
+          <p>Complianceprüfung</p>
+          <label id="compliance"></label> 
+          <p>Kundenanforderungen</p>
+          <label id="k_anforderung"></label> 
+          <p>Status Produktion</p>
+          <label id="status_p"></label>
+          <p>Erstellt von</p>
+          <label id="created"></label>
+          
+      </div>
+  </div>
+</body>
+</html>
